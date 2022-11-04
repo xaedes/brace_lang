@@ -13,11 +13,13 @@ An example for formating string as suggested in above examples is given in forma
 from brace_lang import BraceLang
 def get_by_path(data,path,default_value): ...
 class FormatString(BraceLang):
-    def evaluate_text(self, text, data): return text
+    def evaluate_text(self, text, data): 
+        return text
     def evaluate_group(self, items, data): 
         s = "".join(items)
         return get_by_path(data, s, s)
-    def evaluate_root(self, items, data): return "".join(map(str,items))
+    def evaluate_root(self, items, data): 
+        return "".join(map(str,items))
     def format_string(self, string, data): 
         return self.evaluate(self.parse(string), None, None, None, data)
 
