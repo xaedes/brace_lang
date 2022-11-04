@@ -38,7 +38,7 @@ def unescape_path(escaped_path, escaped="\:"):
 class FormatString(BraceLang):
     def evaluate_text(self, text, data): return text
     def evaluate_group(self, items, data): 
-        s = "".join(items)
+        s = "".join(map(str,items))
         return get_by_path(data, s, s)
     def evaluate_root(self, items, data): return "".join(map(str,items))
     def format_string(self, string, data): 
