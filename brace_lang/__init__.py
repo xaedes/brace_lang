@@ -97,4 +97,4 @@ class BraceLang:
         if isinstance(node, self.Text): return eval_text(node.text, *args, **kwargs)
         elif isinstance(node, self.Group): return eval_group(list(map(recurse, node.items)), *args, **kwargs)
         elif isinstance(node, self.Root): return eval_root(list(map(recurse, node.items)), *args, **kwargs)
-
+        else: raise Exception(f"Unexpected node type {type(node)}")
