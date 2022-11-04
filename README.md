@@ -36,9 +36,9 @@ print(fs.format_string("The {attr} of {name}: {{name}.{attr}.value}", data))
 Clone the repo, cd into it and `pip install .` it.
 
 ## Notes:
-To use { or }, use \{ or \}.
-To use \, use \\.
-Other backslashes are interpreted as normal backslashes, i.e. \4 is the character '\\' followed by the character '4'.
+To use { or }, use \\{ or \\}.
+To use \\, use \\\\.
+Other backslashes are ignored, i.e. \4 will be interpreted as the character '4'.
 Open braces are automatically closed when reaching end-of-text.
 
 
