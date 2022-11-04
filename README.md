@@ -7,7 +7,6 @@ examples:
 - "This is an open brace: \\{"
 - "Missing close brace will be automatically inserted: {name"
 
-The language will parse brace groups which you can then evaluate as you wish.
 An example for formating string as suggested in above examples is given in format_string.py:
 
 ```python3
