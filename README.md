@@ -23,8 +23,15 @@ class FormatString(BraceLang):
     def format_string(self, string, data): 
         return self.evaluate(self.parse(string), None, None, None, data)
 
-```
 
+fs = FormatString()
+data = {"name": "John", "attr": "age", "John": {"age": {"value": 20}}}
+print(fs.format_string("Hello {name}! {{name}}", data))
+print(fs.format_string("The {attr} of {name}: {{name}.{attr}.value}", data))
+# Outputs:
+# Hello John! {'age': {'value': 20}}
+# The age of John: 20
+```
 ## Installation:
 Clone the repo, cd into it and `pip install .` it.
 
