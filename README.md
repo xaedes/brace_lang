@@ -1,17 +1,13 @@
 # brace_lang
+A simple language with {open and close} braces. You can parse brace groups and evaluate them however you want.
 
-Simple language with open and close braces
-to use { or }, use \{ or \}.
-to use \, use \\.
-other backslashes are interpreted as normal backslashes, i.e. \4 is the character '\\' followed by the character '4'.
-Open braces are automatically closed when reaching end-of-text.
 examples: 
 - "Hello {name}!"
 - "{attr} of {name}: {name.{attr}.value}"
 - "This is an open brace: \\{"
-- "Missing close bracket will be automatically inserted: {name"
+- "Missing close brace will be automatically inserted: {name"
 
-The language will parse bracket groups which you can then evaluate as you wish.
+The language will parse brace groups which you can then evaluate as you wish.
 An example for formating string as suggested in above examples is given in format_string.py:
 
 ```python3
@@ -25,3 +21,9 @@ class FormatString(BraceLang):
         return self.evaluate(self.parse(string), None, None, None, data)
 
 ```
+
+Notes:
+To use { or }, use \{ or \}.
+To use \, use \\.
+Other backslashes are interpreted as normal backslashes, i.e. \4 is the character '\\' followed by the character '4'.
+Open braces are automatically closed when reaching end-of-text.
