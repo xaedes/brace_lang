@@ -49,17 +49,32 @@ def main():
     bl = BraceLang()
     tree = bl.parser.parse("Hello {na{m}e}!")
     print(tree.pretty())
+    # Outputs the parsed lark tree
+
     res = bl.parse("Hello {na{m}e}!")
     print(res)
     print(repr(res))
+    # Outputs:
+    #
+    # Hello {na{m}e}!
+    # Root([Text('Hello '), Group([Text('na'), Group([Text('m')]), Text('e')]), Text('!')])('Hello ', ['na', ['m'], 'e'], '!')
+
     print(bl.transform(res))
     print(bl.transform(res,list,tuple))
     print(bl.evaluate(res))
+    # Outputs:
+    #
+    # ('Hello ', ['na', ['m'], 'e'], '!')
+    # ['Hello ', ('na', ('m',), 'e'), '!']
+    # ['Hello ', ['na', ['m'], 'e'], '!']
 
     fs = FormatString()
     data = {"name": "John", "attr": "age", "John": {"age": {"value": 20}}}
     print(fs.format_string("Hello {name}! {{name}}", data))
     print(fs.format_string("The {attr} of {name}: {{name}.{attr}.value}", data))
-
+    # Outputs:
+    #
+    # Hello John! {'age': {'value': 20}}
+    # The age of John: 20
 if __name__ == "__main__":
     main()
