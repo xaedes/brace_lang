@@ -7,4 +7,4 @@ other backslashes are interpreted as normal backslashes, i.e. \4 is the characte
 examples: 
 - "Hello {name}!"
 - "{attr} of {name}: {name.{attr}.value}"
-- "This is an open brace: \{"
+- "This is an open brace: \\{"
