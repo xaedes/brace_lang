@@ -1,7 +1,7 @@
 # brace_lang
 A simple language with {open and close} braces. You can parse brace groups and evaluate them however you want.
 
-examples: 
+Examples: 
 - "Hello {name}!"
 - "{attr} of {name}: {name.{attr}.value}"
 - "This is an open brace: \\{"
@@ -10,6 +10,8 @@ examples:
 An example for formating string as suggested in above examples is given in format_string.py:
 
 ```python3
+from brace_lang import BraceLang
+def get_by_path(data,path,default_value): ...
 class FormatString(BraceLang):
     def evaluate_text(self, text, data): return text
     def evaluate_group(self, items, data): 
@@ -21,8 +23,13 @@ class FormatString(BraceLang):
 
 ```
 
-Notes:
+## Installation:
+Clone the repo, cd into it and `pip install .` it.
+
+## Notes:
 To use { or }, use \{ or \}.
 To use \, use \\.
 Other backslashes are interpreted as normal backslashes, i.e. \4 is the character '\\' followed by the character '4'.
 Open braces are automatically closed when reaching end-of-text.
+
+
