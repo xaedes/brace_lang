@@ -3,36 +3,35 @@ __version__ = '0.0.1'
 import lark
 
 class BraceLang:
-    def __init__(self):
+    def __init__(self, open=r"{", close=r"}", escape=r"\\"):
         # Simple language with open and close braces
-        # to use { or }, use \{ or \}.
-        # to use \, use \\.
+        # to use { or }, use \{ or \}. to use \, use \\.
         # other backslashes are interpreted as normal backslashes, i.e. \4 is the character '\' followed by the character '4'.
         # examples: 
         # - "Hello {name}!"
         # - "{attr} of {name}: {name.{attr}.value}"
         # - "This is an open brace: \{"
-        self.parser = lark.Lark(
-            r"""
+        self.open, self.close, self.escape = open, close, escape
+        self.grammar = f"""
             ?start: expr 
             expr: [(text | group)*]
             text: char+
-            group: "{" expr "}"
+            group: "{open}" expr "{close}"
             ?char: escaped_open_brace | escaped_close_brace | escaped_backslash | escaped_other | other_char
-            ?escaped_open_brace: "\\" "{"
-            ?escaped_close_brace: "\\" "}"
-            ?escaped_backslash: "\\" "\\"
-            ?escaped_other: "\\" other_char
-            ?other_char: /[^{}\\]/
-            """)
+            ?escaped_open_brace: "{escape}" "{open}"
+            ?escaped_close_brace: "{escape}" "{close}"
+            ?escaped_backslash: "{escape}" "{escape}"
+            ?escaped_other: "{escape}" other_char
+            ?other_char: /[^\\{open}\\{close}{escape}]/"""
+        self.parser = lark.Lark(self.grammar)
         self.setup_expected_token_to_string()
     class Text:
         def __init__(self, text): self.text = text
         def __str__(self): return self.text
         def __repr__(self): return f"Text({self.text!r})"
     class Group:
-        def __init__(self, items): self.items = items
-        def __str__(self): return "{"+"".join(map(str, self.items))+"}"
+        def __init__(self, items, open, close): self.items, self.open, self.close = items, open, close
+        def __str__(self): return self.open+"".join(map(str, self.items))+self.close
         def __repr__(self): return f"Group({self.items!r})"
     class Root:
         def __init__(self, items): self.items = items
@@ -59,22 +58,22 @@ class BraceLang:
         return success, exception, tree
     def setup_expected_token_to_string(self):
         self._expected_token_to_string = {
-            "RBRACE": "}"
+            "RBRACE": self.close
         }
     def _parse_lark(self, tree):
         type = tree.data.value
         # the only place where a expr can be created is in the start rule and in group.
         # group is handled in the next if statement.
         if type == "expr": return self.Root([self._parse_lark(child) for child in tree.children])
-        elif type == "group" and tree.children[0].data.value == "expr": return self.Group([self._parse_lark(child) for child in tree.children[0].children])
+        elif type == "group" and tree.children[0].data.value == "expr": return self.Group([self._parse_lark(child) for child in tree.children[0].children], self.open, self.close)
         elif type == "text": return self.Text("".join(self._parse_char(child) for child in tree.children))
         else: raise Exception(f"Unexpected type {type}, tree: {tree}")
     def _parse_char(self, tree):
         if not hasattr(tree, "data"): return tree.value
         type = tree.data.value
-        if type == "escaped_open_brace": return "{"
-        elif type == "escaped_close_brace": return "}"
-        elif type == "escaped_backslash": return "\\"
+        if type == "escaped_open_brace": return self.open
+        elif type == "escaped_close_brace": return self.close
+        elif type == "escaped_backslash": return self.escape
         elif type == "escaped_other": return tree.children[0].value
         elif type == "other_char": return tree.children[0].value
         else: raise Exception(f"Unexpected type {type}, tree: {tree}")
